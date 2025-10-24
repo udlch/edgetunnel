@@ -151,7 +151,7 @@ export default {
                         status: 200
                     });
                 } else if (pathname === "/" + env.KEY || pathname === "/" + userID) {
-                    await sendTelegramMessage("#Get_Subscription " + subname, request.headers.get("CF-Connecting-IP"), "UA: " + userAgent + "</tg-spoiler>\nDomain: " + url.hostname + "\n<tg-spoiler>Entry: " + (url.pathname + url.search) + "</tg-spoiler>");
+                    await sendTelegramMessage("#Get_Subscription " + subname, request.headers.get("CF-Connecting-IP"), "UA: " + userAgent + "\nDomain: " + url.hostname + "\nEntry: " + (url.pathname + url.search) + "");
                     const subscription = await generateSubscription(userID, request.headers.get("Host"), sub, userAgent, rproxyip, url, env);
                     const now_ms = Date.now();
                     const today_start = new Date(now_ms);
@@ -712,7 +712,7 @@ function parseSocks5(address) {
         throw new Error("Invalid SOCKS address format: port must be a number");
     }
     hostname = hostParts.join(":");
-    const ipv6Regex = /^\ Казах.*\ Казах$/;
+    const ipv6Regex = /^ Казах.* Казах$/;
     if (hostname.includes(":") && !ipv6Regex.test(hostname)) {
         throw new Error("Invalid SOCKS address format: IPv6 address must be enclosed in brackets, e.g., [2001:db8::1]");
     }
@@ -872,7 +872,7 @@ async function generateSubscription(uuid, host, sub, userAgent, rproxyip, url, e
         }
 
         const dynamic_info = path != uuid ? `TOKEN: ${path}\nUUIDNow: ${uuid}\nUUIDLow: ${fk_id}\nTIME (Dynamic UUID validity): ${time} days\nUPTIME (Dynamic UUID update time): ${uptime}h (Beijing Time)\n\n` : "";
-        return `\n################################################################\nSubscribe / sub URL, supports Base64, clash-meta, sing-box formats\n---------------------------------------------------------------\nAdaptive Subscription URL:\nhttps://${_0x28085f}${host}/${path}\nhttps://${_0x28085f}${host}/${path}?sub\n\nBase64 Subscription URL:\nhttps://${_0x28085f}${host}/${path}?b64\nhttps://${_0x28085f}${host}/${path}?base64\n\nClash Subscription URL:\nhttps://${_0x28085f}${host}/${path}?clash\n\nSing-box Subscription URL:\nhttps://${_0x28085f}${host}/${path}?sb\nhttps://${_0x28085f}${host}/${path}?singbox\n---------------------------------------------------------------\n################################################################\n${subname} Configuration Info\n---------------------------------------------------------------\n${dynamic_info}HOST: ${host}\nUUID: ${uuid}\nFKID: ${fk_id}\nUA: ${userAgent}\n${sub_info}\n---------------------------------------------------------------\n################################################################\nv2ray\n---------------------------------------------------------------\n${vless_ws_tls}\n---------------------------------------------------------------\n################################################################\nclash-meta\n---------------------------------------------------------------\n${vless_ws_nontls}\n---------------------------------------------------------------\n################################################################\n` + atob("dGVsZWdyYW0gR3JvdXA6IGh0dHBzOi8vdC5tZS9DTUxpdXNzc3MKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCmdpdGh1YjogR2l2ZSBhIFN0YXIhU3RhcghTdGFyISEhCmh0dHBzOi8vZ2l0aHViLmNvbS9jbWxpdS9lZGdldHVubmVsCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQojIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIw==") + "\n";
+        return `\n################################################################\nSubscribe / sub URL, supports Base64, clash-meta, sing-box formats\n---------------------------------------------------------------\nAdaptive Subscription URL:\nhttps://${_0x28085f}${host}/${path}\nhttps://${_0x28085f}${host}/${path}?sub\n\nBase64 Subscription URL:\nhttps://${_0x28085f}${host}/${path}?b64\nhttps://${_0x28085f}${host}/${path}?base64\n\nClash Subscription URL:\nhttps://${_0x28085f}${host}/${path}?clash\n\nSing-box Subscription URL:\nhttps://${_0x28085f}${host}/${path}?sb\nhttps://${_0x28085f}${host}/${path}?singbox\n---------------------------------------------------------------\n################################################################\n${subname} Configuration Info\n---------------------------------------------------------------\n${dynamic_info}HOST: ${host}\nUUID: ${uuid}\nFKID: ${fk_id}\nUA: ${userAgent}\n${sub_info}\n---------------------------------------------------------------\n################################################################\nv2ray\n---------------------------------------------------------------\n${vless_ws_tls}\n---------------------------------------------------------------\n################################################################\nclash-meta\n---------------------------------------------------------------\n${vless_ws_nontls}\n---------------------------------------------------------------\n################################################################\n` + atob("dGVsZWdyYW0gR3JvdXA6IGh0dHBzOi8vdC5tZS9DTUxpdXNzc3MKLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpnaXRodWI6IEdpdmUgYSBTdGFyIVN0YXIgU3RhciEhIQpodHRwczovL2dpdGh1Yi5jb20vY21saXUvZWRnZXR1bm5lbAotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQojIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIw==") + "\n";
     } else {
         try {
             let sub_content;
@@ -968,9 +968,9 @@ async function sendTelegramMessage(message, ip, extra_info = '') {
         const response = await fetch(`http://ip-api.com/json/${ip}?lang=en`);
         if (response.ok) {
             const data = await response.json();
-            location_info = `${message}\nIP: ${ip}\nCountry: ${data.country}\n<tg-spoiler>City: ${data.city}\nOrganization: ${data.org}\nASN: ${data.as}\n${extra_info}`;
+            location_info = `${message}\nIP: ${ip}\nCountry: ${data.country}\nCity: ${data.city}\nOrganization: ${data.org}\nASN: ${data.as}\n${extra_info}`;
         } else {
-            location_info = `${message}\nIP: ${ip}\n<tg-spoiler>${extra_info}`;
+            location_info = `${message}\nIP: ${ip}\n${extra_info}`;
         }
         const url = `https://api.telegram.org/bot${tgtoken}/sendMessage?chat_id=${tgid}&parse_mode=HTML&text=${encodeURIComponent(location_info)}`;
         return fetch(url, {
